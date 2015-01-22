@@ -7,6 +7,7 @@
 //
 
 #import "TipCalculatorViewController.h"
+#import "SettingsViewController.h"
 
 @interface TipCalculatorViewController ()
 @property (weak, nonatomic) IBOutlet UITextField *billTextField;
@@ -14,6 +15,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *totalLabel;
 @property (weak, nonatomic) IBOutlet UISegmentedControl *tipControl;
 - (void) updateValues;
+- (void) initTipControl;
 @end
 
 @implementation TipCalculatorViewController
@@ -21,6 +23,25 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
+    self.title = @"Tip Calculator";
+
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Settings" style:UIBarButtonItemStylePlain target:self action:@selector(onSettingsButton)];
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [self initTipControl];
+    [self updateValues];
+}
+
+- (void)initTipControl {
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    int intValue = [defaults integerForKey:@"default_tip_index"];
+    intValue = intValue == 0 ? 3 : intValue;
+    self.tipControl.selectedSegmentIndex = intValue - 1;
+}
+
+- (void)onSettingsButton {
+    [self.navigationController pushViewController:[[SettingsViewController alloc] init] animated:YES];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -30,6 +51,10 @@
 
 
 - (void)updateValues {
+
+    if (self.billTextField.text.length == 0)
+        return;
+
     float billAmount = [self.billTextField.text floatValue];
     
     NSArray *tipValues = @[@(0.1), @(0.2), @(0.3)];

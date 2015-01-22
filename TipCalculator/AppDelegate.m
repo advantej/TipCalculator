@@ -21,7 +21,8 @@
     
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     TipCalculatorViewController *vc = [[TipCalculatorViewController alloc] init];
-    self.window.rootViewController = vc;
+    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:vc];
+    self.window.rootViewController = navigationController;
     [self.window makeKeyAndVisible];
     
     return YES;
